@@ -2,11 +2,13 @@
 using System.IO;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Text.Json;
 
 namespace Ćwiczenia2
 {
     class Program
     {
+        // Główna metoda programu
         static void Main(string[] args)
         {
             try
@@ -19,8 +21,15 @@ namespace Ćwiczenia2
             }
         }
 
-        static void Start(string inputFile = @"..\data.csv",
-            string outputFile = "result.xml", String dataType = "xml")
+        /// <summary>
+        /// Metoda wczytująca dane z pliku do innego pliku
+        /// w podanym formacie
+        /// </summary>
+        /// <param name="inputFile">Następuje odczyt z tego pliku</param>
+        /// <param name="outputFile">Zmienna, gdzie zapisać</param>
+        /// <param name="dataType">Format danych w pliku</param>
+        static void Start(string inputFile = @"data.csv",
+            string outputFile = "result", String dataType = "xml")
         {
             List<Student> students = new List<Student>();
             FileInfo file = new FileInfo(inputFile);
@@ -43,11 +52,31 @@ namespace Ćwiczenia2
                     }
                 }
 
-                FileStream writer = new FileStream(outputFile, FileMode.Create);
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Student>),
-                    new XmlRootAttribute("uczelnia"));
+                FileStream writer = null;
+                switch(dataType)
+                {
+                    case "xml":
+                        outputFile += ("." + dataType);
+                        writer = new FileStream(outputFile, FileMode.Create);
+                        XmlSerializer serializer = new XmlSerializer(typeof(List<Student>),
+                            new XmlRootAttribute("uczelnia"));
+                        serializer.Serialize(writer, students);
+                        break;
+                    case "json":
+                        outputFile += ("." + "json");
+                        var jsonString = JsonSerializer.Serialize(students);
+                        File.WriteAllText(outputFile, jsonString);
+                        break;
+                    default:
+                        Console.WriteLine("Can't recognize file type");
+                        break;
+                }
 
-                serializer.Serialize(writer, students);
+                /*FileStream writer = new FileStream(outputFile, FileMode.Create);
+                XmlSerializer serializer = new XmlSerializer(typeof(List<Student>),
+                    new XmlRootAttribute("uczelnia"));*/
+
+                //serializer.Serialize(writer, students);
             }
             else
             {
