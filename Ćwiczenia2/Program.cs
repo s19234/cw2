@@ -28,6 +28,7 @@ namespace Ćwiczenia2
         /// <param name="inputFile">Następuje odczyt z tego pliku</param>
         /// <param name="outputFile">Zmienna, gdzie zapisać</param>
         /// <param name="dataType">Format danych w pliku</param>
+        /// <exception cref="FileNotFoundException">Jeśli plik do wczytania nie istnieje</exception>
         static void Start(string inputFile = @"data.csv",
             string outputFile = "result", String dataType = "xml")
         {
@@ -59,7 +60,7 @@ namespace Ćwiczenia2
                         outputFile += ("." + dataType);
                         writer = new FileStream(outputFile, FileMode.Create);
                         XmlSerializer serializer = new XmlSerializer(typeof(List<Student>),
-                            new XmlRootAttribute("uczelnia"));
+                            new XmlRootAttribute("uczelnia\ncreateAd" + DateTime.Today.ToString()));
                         serializer.Serialize(writer, students);
                         break;
                     case "json":
@@ -71,12 +72,6 @@ namespace Ćwiczenia2
                         Console.WriteLine("Can't recognize file type");
                         break;
                 }
-
-                /*FileStream writer = new FileStream(outputFile, FileMode.Create);
-                XmlSerializer serializer = new XmlSerializer(typeof(List<Student>),
-                    new XmlRootAttribute("uczelnia"));*/
-
-                //serializer.Serialize(writer, students);
             }
             else
             {
