@@ -1,3 +1,3 @@
-C# - ćwiczenia 2\n
+C# - ćwiczenia 2
 Zapisywanie do XML
 Zapisywanie do JSON
