@@ -1,4 +1,7 @@
-﻿namespace Ćwiczenia2
+﻿using System;
+using System.Text.RegularExpressions;
+
+namespace Ćwiczenia2
 {
     /// <summary>
     /// Klasa student
@@ -20,7 +23,7 @@
             this.Type1 = studentInfo[3] is null ? "0" : studentInfo[3];
             this.Index = studentInfo[4] is null ? "0" : "s" + studentInfo[4];
             this.DateOfBirth = studentInfo[5] is null ? "0" : studentInfo[5].Replace("-", ".");
-            this.Email = studentInfo[6] is null ? "0" : studentInfo[6];
+            this.Email = studentInfo[6] is null ? "0" : Regex.Replace(studentInfo[6], "[0-9]{2,}", Index);
             this.MName = studentInfo[7] is null ? "0" : studentInfo[7];
             this.FName = studentInfo[8] is null ? "0" : studentInfo[8];
         }
