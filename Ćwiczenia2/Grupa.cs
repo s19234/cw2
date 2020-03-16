@@ -5,6 +5,8 @@ using System.Xml;
 using System.Linq;
 using Newtonsoft.Json; // instalowanie Newtonsoft.Json w pakiecie Nuget
 
+using DWORD = System.Int32;
+
 namespace Ćwiczenia2
 {
     /// <summary>
@@ -30,30 +32,79 @@ namespace Ćwiczenia2
         }
 
         /// <summary>
-        /// Metoda dodająca studenta do grupy
+        /// Metoda do dodawania studenta do listy w grupie
         /// </summary>
         /// <param name="student">Student do dodania</param>
-        public void AddStudent(Student student)
+        /// <returns>Zwraca -1 jeśli podany student już istnieje w grupie, w innych przypadkach zwraca 0</returns>
+        public DWORD AddStudent(Student student)
         {
-            this.students.Add(student);
+            if (this.students.Contains(student))
+                return -1;
+            else
+            {
+                this.students.Add(student);
+                return 0;
+            }
         }
 
         /// <summary>
-        /// Metoda agregująca dwie listy studentów
+        /// Metoda do agregacji do listy studentów
         /// </summary>
         /// <param name="students">Lista studentów do dodania</param>
-        public void AddStudents(List<Student> students)
+        /// <returns>Zwraca -1 jeśli chociaż jeden student jest duplikowanym, zwraca -2 jeśli wszyscy, zero jeśli żaden </returns>
+        public DWORD AddStudents(List<Student> students)
         {
-            this.students.AddRange(students);
+            int howmany = 0;
+            foreach(Student student in students)
+            {
+                if(this.students.Contains(student))
+                {
+                    howmany++;
+                }
+                else
+                {
+                    this.students.Add(student);
+                }
+
+                
+            }
+            if (howmany > 0 && howmany < students.Count)
+                return -1;
+
+            if (howmany.Equals(students.Count))
+                return -2;
+
+            return 0;
         }
 
         /// <summary>
         /// Lista arbitralnej długości studentów do agregacji
         /// </summary>
         /// <param name="students">Lista studentów do dodania</param>
-        public void AddStudents(params Student[] students)
+        /// /// <returns>Zwraca -1 jeśli chociaż jeden student jest duplikowanym, zwraca -2 jeśli wszyscy, zero jeśli żaden </returns>
+        public DWORD AddStudents(params Student[] students)
         {
-            this.students.AddRange(students);
+            int howMany = 0;
+            foreach (Student student in students)
+            {
+                if (this.students.Contains(student))
+                {
+                    howMany++;
+                }
+                else
+                {
+                    this.students.Add(student);
+                }
+
+
+            }
+            if (howMany > 0 && howMany < students.Count())
+                return -1;
+
+            if (howMany.Equals(students.Count()))
+                return -2;
+
+            return 0;
         }
 
         /// <summary>
@@ -107,7 +158,7 @@ namespace Ćwiczenia2
         /// </summary>
         /// <param name="writer">Xml writer wykorzystywany przy formatowanym zapise do pliku</param>
         /// <param name="student">Student do zapisu</param>
-        private void WriteToXmlFile(XmlWriter writer, Student student)
+        private void WriteToXmlFile(in XmlWriter writer, in Student student)
         {
             writer.WriteStartElement("student");
             writer.WriteAttributeString("indexNumber", student.Index);
@@ -157,7 +208,7 @@ namespace Ćwiczenia2
         /// </summary>
         /// <param name="writer">Json writer wykorzystywany przy formatowanym zapise do pliku</param>
         /// <param name="student">Student do zapisu</param>
-        private void WriteToJsonFile(JsonWriter writer, Student student)
+        private void WriteToJsonFile(in JsonWriter writer, in Student student)
         {
             writer.WriteStartObject();
             writer.WritePropertyName("index");
